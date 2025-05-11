@@ -1,0 +1,60 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(smb LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+set(SOURCES background.cc
+    background.h
+    blend.cc
+    blend.h
+    blur_split_screen.h
+    effect.h
+    effect.cc
+    encode_render.cc
+    encode_render.h
+    error_code.h
+    # extra_effect.h
+    face.h
+    face_detection.h
+    face_markup_render.cc
+    face_markup_render.h
+    filter.h
+    flash_white.h
+    frame_buffer.cc
+    frame_buffer.h
+    gaussian_blur.cc
+    gaussian_blur.h
+    gl.h
+    hallucination.h
+    image_buffer.h
+    image_process.cc
+    image_process.h
+    opengl.cc
+    opengl.h
+    opengl_observer.h
+    # parse_config.cc
+    # parse_config.h
+    pixel_late.cc
+    process_buffer.cc
+    process_buffer.h
+    trinity.h
+    # yuv_render.h
+    cjson/cJSON.c
+    cjson/cJSON_Utils.c
+)
+
+include_directories(stb)
+include_directories(cjson)
+include_directories(glm/glm)
+
+add_executable(main main.cc ${SOURCES})
+
+find_package(glfw3 REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(PNG REQUIRED)
+
+target_include_directories(main PRIVATE ${OPENGL_INCLUDE_DIRS})
+target_link_libraries(main ${OPENGL_LIBRARIES} glfw PNG::PNG)
