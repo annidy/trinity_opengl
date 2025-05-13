@@ -48,13 +48,64 @@ set(SOURCES background.cc
 
 include_directories(stb)
 include_directories(cjson)
-include_directories(glm/glm)
 
 add_executable(main main.cc ${SOURCES})
 
-find_package(glfw3 REQUIRED)
+include(FetchContent)
+
+# GLFW
+find_package(glfw3 3.4 QUIET)
+if (NOT glfw3_FOUND)
+    FetchContent_Declare(
+        glfw3
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
+    )
+    FetchContent_GetProperties(glfw3)
+    if (NOT glfw3_POPULATED)
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_Populate(glfw3)
+        add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR})
+    endif()
+endif()
+
+
+# GLEW
+find_package(GLEW 2.2.0 QUIET)
+if (NOT GLEW_FOUND)
+    FetchContent_Declare(
+        glew
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip
+    )
+
+    FetchContent_GetProperties(glew)
+    if(NOT glew_POPULATED)
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_MakeAvailable(glew)
+        add_subdirectory("${glew_SOURCE_DIR}/build/cmake" glew_cmake)
+    endif()
+endif()
+
+# GLM
+find_package(glm 1.0.1 QUIET)
+if (NOT glm_FOUND)
+    FetchContent_Declare(
+            glm
+            DOWNLOAD_EXTRACT_TIMESTAMP OFF
+            URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
+    )
+    FetchContent_GetProperties(glm)
+    if (NOT glm_POPULATED)
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_Populate(glm)
+        add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
+    endif()
+endif()
+set_target_properties(glm PROPERTIES FOLDER "Dependencies")
 find_package(OpenGL REQUIRED)
+
 find_package(PNG REQUIRED)
 
 target_include_directories(main PRIVATE ${OPENGL_INCLUDE_DIRS})
-target_link_libraries(main ${OPENGL_LIBRARIES} glfw PNG::PNG)
+target_link_libraries(main ${OPENGL_LIBRARIES} glfw GLEW::glew glm PNG::PNG)

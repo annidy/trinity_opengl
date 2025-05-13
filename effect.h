@@ -42,14 +42,9 @@
 #include "filter.h"
 
 // glm
-#include "gtx/norm.hpp"
-#include "ext.hpp"
-#include "geometric.hpp"
-#include "trigonometric.hpp"
-#include "ext/vector_float2.hpp"
-#include "common.hpp"
-#include "vec2.hpp"
-#include "gtx/rotate_vector.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 extern "C" {
 #include "cJSON.h"
